@@ -21,6 +21,10 @@ public class SearchController {
   public String doGetSearch(@RequestParam String foo, HttpServletResponse response, HttpServletRequest request) {
     java.lang.Object message = new Object();
     try {
+      if (!isValidInput(foo)) {
+          throw new IllegalArgumentException("Invalid input");
+      }
+    
       ExpressionParser parser = new SpelExpressionParser();
       Expression exp = parser.parseExpression(foo);
       message = (Object) exp.getValue();
@@ -28,5 +32,11 @@ public class SearchController {
       System.out.println(ex.getMessage());
     }
     return message.toString();
+  }
+  
+  private boolean isValidInput(String input) {
+    // Add your validation logic here
+    // Example: Whitelist specific characters or patterns
+    return input.matches("[a-zA-Z0-9_]+");
   }
 }
